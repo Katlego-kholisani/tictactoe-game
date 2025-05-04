@@ -1,6 +1,7 @@
 import './styles.scss';
 import { useState } from "react";
 import Board from './components/Board';
+import StatusMessage from './components/StatusMessage';
 import {calculateWinner} from './winner';
 
 function App() {
@@ -8,16 +9,13 @@ function App() {
     const [isXNext, setIsXNext] = useState(false);
 
     const winner = calculateWinner(squares);
-    const nextPlayer = isXNext ? 'X' : 'O';
-    const isDraw = !winner && squares.every(square => square !== null);
-    const statusMessage = winner ? `Winner is ${winner}` : isDraw ? "Game is a draw!" : `Next player is ${nextPlayer}`;
 
     console.log(winner);
 
     const handleSquareClick = (clickedPosition) => {
-      if (squares[clickedPosition] || winner || isDraw) {
-          return;
-      }
+      if (squares[clickedPosition] || winner || squares.every(sq => sq !== null)) {
+        return; // Block moves after win/tie
+    }
 
       setSquares((currentSquares) => {
           return currentSquares.map((squareValue, position) => {
@@ -34,12 +32,9 @@ function App() {
 
   return (
     <div className='app'>
-      <h2 className={winner ? "text-green" : "text-orange"}>
-            {statusMessage}
-      </h2>
-      <Board squares={squares} handleSquareClick = {handleSquareClick}/>
+      <StatusMessage winner={winner} isXNext={isXNext} squares={squares}/>
+      <Board squares={squares} handleSquareClick={handleSquareClick}/>
     </div>
-
   );
 }
 
