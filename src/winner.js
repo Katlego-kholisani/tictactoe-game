@@ -13,8 +13,14 @@ export function calculateWinner(squares) {
   for (let line of lines) {
     const [a, b, c] = line;
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
+      return {
+        winner: squares[a],
+        winningSquare: line,
+      };
     }
   }
-  return null;
+  return {
+    winner: null,
+    winningSquare: [],
+  };
 }
